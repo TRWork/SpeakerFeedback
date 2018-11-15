@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REGISTER_USER = 0;
+    private static final int SHOW_USERS = 1;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private TextView textView;
     private String userId;
@@ -140,6 +142,13 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }
                 break;
+            case SHOW_USERS:
+                if (resultCode == RESULT_OK) {
+
+                } else {
+
+                    finish();
+                }
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
@@ -169,5 +178,12 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void onClickUsersBar(View view) {
+
+        // Call the usr list activity here
+        Intent intent = new Intent(this, UsersList.class);
+        startActivityForResult(intent, SHOW_USERS);
     }
 }
