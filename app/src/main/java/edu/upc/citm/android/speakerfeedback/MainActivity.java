@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,17 +40,24 @@ public class MainActivity extends AppCompatActivity {
     private String userId;
     private List<Poll> polls;
 
+    private RecyclerView polls_view;
+    private Adapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // TODO: this is not working but have to
+        //polls_view = findViewById(R.id.polls_view);
+        adapter = new Adapter();
+
+        polls_view.setLayoutManager(new LinearLayoutManager(this));
+        polls_view.setAdapter(adapter);
+
         textView = findViewById(R.id.textView);
 
         getOrRegisterUser();
-
-
-
     }
 
     @Override
@@ -198,5 +208,39 @@ public class MainActivity extends AppCompatActivity {
         // Call the usr list activity here
         Intent intent = new Intent(this, UsersList.class);
         startActivityForResult(intent, SHOW_USERS);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder{
+        private TextView question_view;
+        private TextView options_view;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            question_view = itemView.findViewById(R.id.question_view);
+            options_view = itemView.findViewById(R.id.options_view);
+        }
+    }
+
+    class Adapter extends RecyclerView.Adapter<ViewHolder>{
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View itemView = getLayoutInflater().inflate(R.layout.poll_view,parent,false);
+            return new ViewHolder(itemView);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            Poll poll = polls.get(position);
+            holder.question_view.setText(poll.getQuestion());
+
+            holder.options_view.setText(poll.getOptionsAsString());
+        }
+
+        @Override
+        public int getItemCount() {
+            return polls.size();
+        }
     }
 }
