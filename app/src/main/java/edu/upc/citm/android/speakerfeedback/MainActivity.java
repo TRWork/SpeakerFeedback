@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -131,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
         db.collection("users").whereEqualTo("room", "testroom").
                 addSnapshotListener(this,usersListener);
 
-        db.collection("rooms").document("testroom").collection("polls").addSnapshotListener(this,pollsListener);
+        //TODO: this is wrong
+        //db.collection("rooms").document("testroom").collection("polls").orderBy(("start", ))addSnapshotListener(this,pollsListener);
     }
 
     private void getOrRegisterUser() {
@@ -211,11 +213,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
+        private CardView card_view;
+        private TextView label_view;
         private TextView question_view;
         private TextView options_view;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            // TODO: this is wrong
+            //card_view = itemView.findViewById(R.id.card_view);
+            label_view = itemView.findViewById(R.id.label_view);
             question_view = itemView.findViewById(R.id.question_view);
             options_view = itemView.findViewById(R.id.options_view);
         }
@@ -233,8 +240,26 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             Poll poll = polls.get(position);
-            holder.question_view.setText(poll.getQuestion());
+            if(position == 0){
+                holder.label_view.setVisibility(View.VISIBLE);
+                if(poll.isOpen()){
+                    holder.label_view.setText("Active");
+                }else{
+                    holder.label_view.setText("Previous");
+                }
+            }else{
+                if(!poll.isOpen() && polls.get(position-1).isOpen()){
+                    holder.label_view.setVisibility(View.VISIBLE);
+                    holder.label_view.setText("Previous");
+                }else{
+                    holder.label_view.setVisibility(View.GONE);
+                }
+            }
 
+            holder.card_view.setCardElevation(poll.isOpen() ? 10.0f: 0.0f);
+            if(!poll.isOpen())
+                holder.card_view.setCardBackgroundColor(0xFFE0E0E0);
+            holder.question_view.setText(poll.getQuestion());
             holder.options_view.setText(poll.getOptionsAsString());
         }
 
