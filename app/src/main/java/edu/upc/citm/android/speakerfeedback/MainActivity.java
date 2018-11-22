@@ -1,8 +1,10 @@
 package edu.upc.citm.android.speakerfeedback;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -213,6 +215,30 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, SHOW_USERS);
     }
 
+    public void OnCardClicked(int pos) {
+        Poll poll = polls.get(pos);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(poll.getQuestion());
+        String[] poll_options = new String[poll.getOptions().size()];
+        for (int i = 0; i < poll.getOptions().size(); i++){
+            poll_options[i] = poll.getOptions().get(i);
+        }
+
+        builder.setItems(poll_options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Map<String,Object> map = new HashMap<String,Object>();
+
+                       /* map.put("pollid",)
+
+                        db.collection("rooms").document("testroom").
+                                collection("votes").document("userId");*/
+                    }
+                });
+
+        builder.create().show();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder{
         private CardView card_view;
         private TextView label_view;
@@ -221,11 +247,17 @@ public class MainActivity extends AppCompatActivity {
 
         public ViewHolder(View itemView) {
             super(itemView);
-            // TODO: this is wrong
             card_view = itemView.findViewById(R.id.card_view);
             label_view = itemView.findViewById(R.id.label_view);
             question_view = itemView.findViewById(R.id.question_view);
             options_view = itemView.findViewById(R.id.options_view);
+            card_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    OnCardClicked(pos);
+                }
+            });
         }
     }
 
@@ -245,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
                 holder.label_view.setVisibility(View.VISIBLE);
                 if(poll.isOpen()){
                     holder.label_view.setText("Active");
+                   // poll.setPoll_id();
                 }else{
                     holder.label_view.setText("Previous");
                 }
