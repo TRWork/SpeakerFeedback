@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textView;
     private String userId;
-    private List<Poll> polls;
+    private List<Poll> polls = new ArrayList<>();
 
     private RecyclerView polls_view;
     private Adapter adapter;
@@ -50,13 +51,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // TODO: this is not working but have to
-        //polls_view = findViewById(R.id.polls_view);
+        polls_view = findViewById(R.id.polls_view);
         adapter = new Adapter();
 
-        //polls_view.setLayoutManager(new LinearLayoutManager(this));
-       // polls_view.setAdapter(adapter);
+        polls_view.setLayoutManager(new LinearLayoutManager(this));
+        polls_view.setAdapter(adapter);
 
-        textView = findViewById(R.id.textView);
+        textView = findViewById(R.id.user_counter_textview);
 
         getOrRegisterUser();
     }
@@ -117,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
                 polls.add(poll);
             }
             Log.i("SpeakerFeedBack",String.format("He carregat %d polls.", polls.size()));
-            // TODO: Avisar l'adaptador
+
+            adapter.notifyDataSetChanged();
         }
     };
 
@@ -131,8 +133,8 @@ public class MainActivity extends AppCompatActivity {
         db.collection("users").whereEqualTo("room", "testroom").
                 addSnapshotListener(this,usersListener);
 
-        //TODO: this is wrong
-        //db.collection("rooms").document("testroom").collection("polls").orderBy(("start", ))addSnapshotListener(this,pollsListener);
+        db.collection("rooms").document("testroom").collection("polls")
+                .orderBy("start", Query.Direction.DESCENDING).addSnapshotListener(this, pollsListener);
     }
 
     private void getOrRegisterUser() {
@@ -220,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         public ViewHolder(View itemView) {
             super(itemView);
             // TODO: this is wrong
-            //card_view = itemView.findViewById(R.id.card_view);
+            card_view = itemView.findViewById(R.id.card_view);
             label_view = itemView.findViewById(R.id.label_view);
             question_view = itemView.findViewById(R.id.question_view);
             options_view = itemView.findViewById(R.id.options_view);
