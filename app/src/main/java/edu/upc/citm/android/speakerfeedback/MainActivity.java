@@ -34,7 +34,6 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REGISTER_USER = 0;
-    private static final int SHOW_USERS = 1;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -168,13 +167,6 @@ public class MainActivity extends AppCompatActivity {
                     finish();
                 }
                 break;
-            case SHOW_USERS:
-                if (resultCode == RESULT_OK) {
-
-                } else {
-
-                    finish();
-                }
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
@@ -210,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Call the usr list activity here
         Intent intent = new Intent(this, UsersList.class);
-        startActivityForResult(intent, SHOW_USERS);
+        startActivity(intent);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
