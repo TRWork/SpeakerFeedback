@@ -53,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         //polls_view = findViewById(R.id.polls_view);
         adapter = new Adapter();
 
-        polls_view.setLayoutManager(new LinearLayoutManager(this));
-        polls_view.setAdapter(adapter);
+        //polls_view.setLayoutManager(new LinearLayoutManager(this));
+       // polls_view.setAdapter(adapter);
 
         textView = findViewById(R.id.textView);
 
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-
 
         db.collection("users").document(userId)
                 .update(
