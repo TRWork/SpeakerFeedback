@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             polls = new ArrayList<>();
             for (DocumentSnapshot doc:documentSnapshots){
                 Poll poll = doc.toObject(Poll.class);
+                poll.setPoll_id(doc.getId());
                 polls.add(poll);
             }
             Log.i("SpeakerFeedBack",String.format("He carregat %d polls.", polls.size()));
@@ -213,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(poll.getQuestion());
         String[] poll_options = new String[poll.getOptions().size()];
+
         for (int i = 0; i < poll.getOptions().size(); i++){
             poll_options[i] = poll.getOptions().get(i);
         }
@@ -221,10 +223,11 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         Map<String,Object> map = new HashMap<String,Object>();
 
-                       /* map.put("pollid",)
+                        map.put("pollid", polls.get(0).getPoll_id());
+                        map.put("option",which);
 
                         db.collection("rooms").document("testroom").
-                                collection("votes").document("userId");*/
+                                collection("votes").document(userId).set(map);
                     }
                 });
 
