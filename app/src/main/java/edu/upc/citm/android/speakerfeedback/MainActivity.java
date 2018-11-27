@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // TODO: this is not working but have to
         polls_view = findViewById(R.id.polls_view);
         adapter = new Adapter();
 
@@ -210,6 +209,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnCardClicked(int pos) {
         Poll poll = polls.get(pos);
+
+        if(!poll.isOpen())
+            return;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(poll.getQuestion());
