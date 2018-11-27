@@ -17,7 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UsersList extends AppCompatActivity {
+public class UsersListActivity extends AppCompatActivity {
 
     // Model
     List<UserItem> items;
@@ -64,12 +64,13 @@ public class UsersList extends AppCompatActivity {
             }
 
 
+            items.clear();
             for (DocumentSnapshot doc : documentSnapshots)
             {
                 UserItem new_user = new UserItem(doc.getString("name"));
                 items.add(new_user);
-                adapter.notifyDataSetChanged();
             }
+            adapter.notifyDataSetChanged();
 
             // textView.setText(usersNames);
             //
