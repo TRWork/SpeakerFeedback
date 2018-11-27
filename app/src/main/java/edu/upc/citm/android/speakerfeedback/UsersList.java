@@ -5,7 +5,14 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
+
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +25,8 @@ public class UsersList extends AppCompatActivity {
     // Referències a elements de la pantalla
     private RecyclerView items_view;
     private UserListAdapter adapter;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,4 +47,32 @@ public class UsersList extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        db.collection("users").whereEqualTo("room", "testroom").
+                addSnapshotListener(this,usersListener);
+    }
+
+    private EventListener<QuerySnapshot> usersListener = new EventListener<QuerySnapshot>() {
+        @Override
+        public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+            if (e != null) {
+                Log.e("SpeakerFeedback", "Error on recieve users inside a room", e);
+                return;
+            }
+
+
+            for (DocumentSnapshot doc : documentSnapshots)
+            {
+                UserItem new_user = new UserItem(doc.getString("name"));
+                items.add(new_user);
+                adapter.notifyDataSetChanged();
+            }
+
+            // textView.setText(usersNames);
+            //
+        }
+    };
 }

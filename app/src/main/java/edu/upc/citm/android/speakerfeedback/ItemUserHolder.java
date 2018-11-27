@@ -4,9 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.TextView;
 
 public class ItemUserHolder extends RecyclerView.ViewHolder {
-    private CheckBox name_view;
+    private TextView name_view;
 
     public ItemUserHolder(@NonNull View itemView, final UserListAdapter.OnClickListener onClickListener) {
         super(itemView);
