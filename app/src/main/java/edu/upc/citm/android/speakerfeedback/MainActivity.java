@@ -149,11 +149,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // Ja està registrat, mostrem el id al Log
             Log.i("SpeakerFeedback", "userId = " + userId);
-            db.collection("users").document(userId)
-                    .update(
-                            "room", "testroom"
-                    );
+            enterRoom();
         }
+    }
+
+    private void enterRoom() {
+        db.collection("users").document(userId)
+                .update(
+                        "room", "testroom"
+                );
     }
 
     @Override
@@ -186,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 prefs.edit()
                         .putString("userId", userId)
                         .commit();
+                enterRoom();
                 Log.i("SpeakerFeedback", "New user: userId = " + userId);
             }
         }).addOnFailureListener(new OnFailureListener() {
