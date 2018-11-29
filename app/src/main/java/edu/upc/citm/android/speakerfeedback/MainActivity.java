@@ -59,6 +59,18 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.user_counter_textview);
 
         getOrRegisterUser();
+        startFirestoreListenerService();
+    }
+
+    private void startFirestoreListenerService() {
+        Intent intent = new Intent(this, FirestoreListenerService.class);
+        intent.putExtra("room", "testroom");
+        startService(intent);
+    }
+
+    private void stopFirestoreListenerService() {
+        Intent intent = new Intent(this, FirestoreListenerService.class);
+        stopService(intent);
     }
 
     @Override
