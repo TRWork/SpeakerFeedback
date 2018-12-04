@@ -57,6 +57,21 @@ public class FirestoreListenerService extends Service {
         startForeground(1, notification);
     }
 
+    private void createForegroundNotificationForNewPoll(Poll poll) {
+        Intent intent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_ID)
+                .setContentTitle(String.format("New poll: <" + poll.getQuestion() + ">"))
+                .setSmallIcon(R.drawable.ic_message)
+                .setContentIntent(pendingIntent)
+                .setVibrate(new long[] { 250, 250, 250, 250, 250 })
+                .setAutoCancel(true)
+                .build();
+
+        startForeground(1, notification);
+    }
+
     @Override
     public void onDestroy() {
         Log.i("SpeakerFeedback", "FirestoreListenerService.onDestroy");
@@ -82,6 +97,7 @@ public class FirestoreListenerService extends Service {
                 Poll poll = doc.toObject(Poll.class);
                 if(poll.isOpen()){
                     Log.d("SpeakerFeedback", "New poll: " + poll.getQuestion());
+                    createForegroundNotificationForNewPoll(poll);
                 }
             }
 
