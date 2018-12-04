@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 .update(
                         "room", FieldValue.delete()
                 );
+        Log.i("SpeakerFeedback", "onDestroy");
 
         super.onDestroy();
 
@@ -267,10 +268,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.close_session_btn:
                 stopFirestoreListenerService();
                 finish();
-                System.exit(0);
                 break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{

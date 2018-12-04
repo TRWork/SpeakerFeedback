@@ -59,7 +59,7 @@ public class FirestoreListenerService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.i("SpeakerFeedback", "FirestoreListenerService.ondDestroy");
+        Log.i("SpeakerFeedback", "FirestoreListenerService.onDestroy");
         super.onDestroy();
     }
 
@@ -80,7 +80,9 @@ public class FirestoreListenerService extends Service {
             for (DocumentSnapshot doc : documentSnapshots)
             {
                 Poll poll = doc.toObject(Poll.class);
-                Log.d("SpeakerFeedback", "New poll: " + poll.getQuestion());
+                if(poll.isOpen()){
+                    Log.d("SpeakerFeedback", "New poll: " + poll.getQuestion());
+                }
             }
 
         }
