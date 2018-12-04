@@ -30,6 +30,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     private void enterRoom() {
         db.collection("users").document(userId)
                 .update(
-                        "room", "testroom"
+                        "room", "testroom", "last_active", new Date()
                 );
     }
 
