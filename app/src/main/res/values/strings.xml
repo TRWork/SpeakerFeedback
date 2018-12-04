@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SpeakerFeedback</string>
+    <string name="close_session">Close session</string>
 </resources>
