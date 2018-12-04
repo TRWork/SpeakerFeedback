@@ -267,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.close_session_btn:
                 stopFirestoreListenerService();
                 finish();
+                System.exit(0);
                 break;
         }
         return super.onOptionsItemSelected(item);

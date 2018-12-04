@@ -9,14 +9,24 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
 public class FirestoreListenerService extends Service {
 
     private boolean connected_to_firestore = false;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.i("SpeakerFeedback", "FirestoreListenerService.onCreate");
+
+
+
     }
 
     @Override
@@ -26,6 +36,9 @@ public class FirestoreListenerService extends Service {
         if(!connected_to_firestore){
             createForegroundNotification();
             connected_to_firestore = true;
+            db.collection("rooms").document("testroom")
+                    .collection("polls").whereEqualTo("open", true)
+                    .addSnapshotListener(polls_listener);
         }
 
         return START_NOT_STICKY;
@@ -55,4 +68,21 @@ public class FirestoreListenerService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
+
+    private EventListener<QuerySnapshot> polls_listener = new EventListener<QuerySnapshot>() {
+        @Override
+        public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+            if (e != null) {
+                Log.e("SpeakerFeedback", "Error on recieve users inside a room", e);
+                return;
+            }
+
+            for (DocumentSnapshot doc : documentSnapshots)
+            {
+                Poll poll = doc.toObject(Poll.class);
+                Log.d("SpeakerFeedback", "New poll: " + poll.getQuestion());
+            }
+
+        }
+    };
 }
