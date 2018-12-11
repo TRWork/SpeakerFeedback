@@ -91,13 +91,19 @@ public class MainActivity extends AppCompatActivity {
 
     private EventListener<DocumentSnapshot> roomListener = new EventListener<DocumentSnapshot>() {
         @Override
-        public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+       public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
             if (e != null) {
                 Log.e("SpeakerFeedback", "Error on recieve rooms/testroom", e);
                 return;
             }
+
             String name = documentSnapshot.getString("name");
             setTitle(name);
+
+            if (!documentSnapshot.getBoolean("open"))
+            {
+                finish();
+            }
         }
     };
 
