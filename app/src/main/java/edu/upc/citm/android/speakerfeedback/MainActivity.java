@@ -97,12 +97,15 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            String name = documentSnapshot.getString("name");
-            setTitle(name);
-
             if (!documentSnapshot.getBoolean("open"))
             {
+                stopFirestoreListenerService();
                 finish();
+            }
+            else
+            {
+                String name = documentSnapshot.getString("name");
+                setTitle(name);
             }
         }
     };
