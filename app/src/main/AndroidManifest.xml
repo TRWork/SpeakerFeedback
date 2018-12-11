@@ -24,7 +24,8 @@
 
         <service android:name=".FirestoreListenerService" />
 
-        <activity android:name=".RoomID"></activity>
+        <activity android:name=".RoomID" />
+        <activity android:name=".RoomPassword"></activity>
     </application>
 
 </manifest>
