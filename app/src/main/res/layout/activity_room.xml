@@ -32,7 +32,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +45,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:text="Enter the room ID"
+        android:textColor="@color/cardview_dark_background"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Enter the room ID" />
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

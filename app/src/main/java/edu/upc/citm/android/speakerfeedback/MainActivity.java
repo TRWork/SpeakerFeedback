@@ -38,6 +38,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REGISTER_USER = 0;
+    private static final int ENTER_ROOM_ID = 1;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -174,7 +175,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // Ja està registrat, mostrem el id al Log
             Log.i("SpeakerFeedback", "userId = " + userId);
-            enterRoom();
+            chooseRoom();
+
+            //enterRoom();
         }
     }
 
@@ -183,6 +186,11 @@ public class MainActivity extends AppCompatActivity {
                 .update(
                         "room", "testroom", "last_active", new Date()
                 );
+    }
+
+    private void chooseRoom() {
+        Intent intent = new Intent(this, RoomID.class);
+        startActivity(intent);
     }
 
     @Override
