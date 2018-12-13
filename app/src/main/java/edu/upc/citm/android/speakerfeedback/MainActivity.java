@@ -153,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // TODO: check if you're already in a room. If not: call the method below
+        chooseRoom();
+
         db.collection("rooms").document("testroom")
                 .addSnapshotListener(this,roomListener);
 
@@ -175,9 +178,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             // Ja està registrat, mostrem el id al Log
             Log.i("SpeakerFeedback", "userId = " + userId);
-            chooseRoom();
 
-            //enterRoom();
+            enterRoom();
         }
     }
 

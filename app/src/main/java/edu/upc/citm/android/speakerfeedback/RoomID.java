@@ -1,14 +1,24 @@
 package edu.upc.citm.android.speakerfeedback;
 
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +27,8 @@ public class RoomID extends AppCompatActivity {
 
     EditText entered_room_id;
     private String password_input = "";
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +44,31 @@ public class RoomID extends AppCompatActivity {
             Toast.makeText(this, "You need to enter a room ID!", Toast.LENGTH_SHORT).show();
         else
         {
-            // TODO: check if room ID exists. If it does: call the method below
-            onPasswordPopup();
+            db.collection("rooms").document(entered_room_id.getText().toString()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Log.i("SpeakerFeedback", documentSnapshot.toString());
+                    if (documentSnapshot.exists()) {
+                        if (documentSnapshot.contains("password") && !documentSnapshot.getString("password").isEmpty()) {
+                            onPasswordPopup(documentSnapshot.get("password").toString());
+                        }
+                    } else {
+                        Toast.makeText(RoomID.this,
+                                "Room ID does not exist. Try again!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(RoomID.this,
+                            e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("SpeakerFeedback", e.getMessage());
+                }
+            });
         }
     }
 
-    protected  void onPasswordPopup()
+    protected  void onPasswordPopup(final String password)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter room password:");
@@ -50,7 +81,13 @@ public class RoomID extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 password_input = input.getText().toString();
-                // TODO: check here if the password is correct
+                if (password_input.equals(password))
+                {
+                    // TODO: enter the selected room here!
+                    Toast.makeText(RoomID.this,
+                            "Password correct", Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
 
