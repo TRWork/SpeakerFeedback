@@ -52,13 +52,15 @@ public class RoomID extends AppCompatActivity {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Log.i("SpeakerFeedback", documentSnapshot.toString());
-                    if (documentSnapshot.exists()) {
-                        if (documentSnapshot.contains("password") && !documentSnapshot.getString("password").isEmpty()) {
+                    if (documentSnapshot.exists() && documentSnapshot.contains("open")) {
+                        if (documentSnapshot.contains("password") && !documentSnapshot.getString("password").isEmpty()) { // Contains password
                             onPasswordPopup(documentSnapshot.get("password").toString());
+                        }else {
+                            sendDataAndFinish();
                         }
                     } else {
                         Toast.makeText(RoomID.this,
-                                "Room ID does not exist. Try again!", Toast.LENGTH_SHORT).show();
+                                "Room ID does not exist or is not opened. Try again!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -91,10 +93,7 @@ public class RoomID extends AppCompatActivity {
                     Toast.makeText(RoomID.this,
                             "Password correct", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(RoomID.this, MainActivity.class);
-                    intent.putExtra("room_id", entered_room_id.getText().toString());
-                    startActivity(intent);
-                    finish();
+                    sendDataAndFinish();
                 }
             }
         });
@@ -107,5 +106,12 @@ public class RoomID extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    private void sendDataAndFinish() {
+        Intent data = new Intent();
+        data.putExtra("room_id", entered_room_id.getText().toString());
+        setResult(RESULT_OK, data);
+        finish();
     }
 }

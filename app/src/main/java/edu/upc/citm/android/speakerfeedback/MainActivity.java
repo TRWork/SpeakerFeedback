@@ -49,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView polls_view;
     private Adapter adapter;
 
+    private boolean connected;
+    private boolean logged;
+    private String room_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,14 +66,18 @@ public class MainActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.user_counter_textview);
 
+        logged = false;
+        connected = false;
+
         getOrRegisterUser();
-        startFirestoreListenerService();
+
     }
 
-    private void startFirestoreListenerService() {
+    private void startFirestoreListenerService(String room_id) {
         Intent intent = new Intent(this, FirestoreListenerService.class);
-        intent.putExtra("room", "testroom");
+        intent.putExtra("room", room_id);
         startService(intent);
+        connected = true;
     }
 
     private void stopFirestoreListenerService() {
@@ -98,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            if (!documentSnapshot.getBoolean("open"))
+            if (!documentSnapshot.contains("open") || !documentSnapshot.getBoolean("open"))
             {
                 stopFirestoreListenerService();
                 finish();
@@ -154,16 +162,19 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         // TODO: check if you're already in a room. If not: call the method below
-        chooseRoom();
+        if(!connected && logged)
+            chooseRoom();
 
-        /*db.collection("rooms").document("testroom")
-                .addSnapshotListener(this,roomListener);
+        if(connected){
+            db.collection("rooms").document(room_id)
+                    .addSnapshotListener(this,roomListener);
 
-        db.collection("users").whereEqualTo("room", "testroom").
-                addSnapshotListener(this,usersListener);
+            db.collection("users").whereEqualTo("room", room_id).
+                    addSnapshotListener(this,usersListener);
 
-        db.collection("rooms").document("testroom").collection("polls")
-                .orderBy("start", Query.Direction.DESCENDING).addSnapshotListener(this, pollsListener);*/
+            db.collection("rooms").document(room_id).collection("polls")
+                    .orderBy("start", Query.Direction.DESCENDING).addSnapshotListener(this, pollsListener);
+        }
     }
 
     private void getOrRegisterUser() {
@@ -175,19 +186,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, RegisterUserActivity.class);
             startActivityForResult(intent, REGISTER_USER);
             Toast.makeText(this, "Encara t'has de registrar", Toast.LENGTH_SHORT).show();
+
         } else {
             // Ja està registrat, mostrem el id al Log
             Log.i("SpeakerFeedback", "userId = " + userId);
-
-            enterRoom();
+            logged = true;
         }
-    }
-
-    public void enterRoom() {
-        db.collection("users").document(userId)
-                .update(
-                        "room", "testroom", "last_active", new Date()
-                );
     }
 
     public void enterRoom(String room_id) {
@@ -209,13 +213,15 @@ public class MainActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     String name = data.getStringExtra("name");
                     registerUser(name);
+                    logged = true;
                 } else {
                     Toast.makeText(this, "Has de registrar un nom", Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 break;
             case ENTER_ROOM_ID:
-                    String room_id = data.getStringExtra("room_id");
+                    room_id = data.getStringExtra("room_id");
+                    startFirestoreListenerService(room_id);
                     enterRoom(room_id);
                 break;
             default:
@@ -236,7 +242,6 @@ public class MainActivity extends AppCompatActivity {
                 prefs.edit()
                         .putString("userId", userId)
                         .commit();
-                enterRoom();
                 Log.i("SpeakerFeedback", "New user: userId = " + userId);
             }
         }).addOnFailureListener(new OnFailureListener() {
