@@ -77,6 +77,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, FirestoreListenerService.class);
         intent.putExtra("room", room_id);
         startService(intent);
+        SharedPreferences prefs = getSharedPreferences("config", MODE_PRIVATE);
+        prefs.edit()
+                .putString("roomId", room_id)
+                .commit();
         connected = true;
     }
 
@@ -202,8 +206,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void chooseRoom() {
-        Intent intent = new Intent(this, RoomID.class);
-        startActivityForResult(intent,ENTER_ROOM_ID);
+        SharedPreferences prefs = getSharedPreferences("config", MODE_PRIVATE);
+        room_id = prefs.getString("roomId", null);
+
+        if(room_id == null){
+            Intent intent = new Intent(this, RoomID.class);
+            startActivityForResult(intent,ENTER_ROOM_ID);
+        }else{
+            startFirestoreListenerService(room_id);
+            enterRoom(room_id);
+        }
+
     }
 
     @Override
