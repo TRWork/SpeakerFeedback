@@ -10,22 +10,14 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-public class RoomID extends AppCompatActivity {
+public class ChooseRoomActivity extends AppCompatActivity {
 
     private static final int MAIN_ACTIVITY = 0;
 
@@ -59,14 +51,14 @@ public class RoomID extends AppCompatActivity {
                             sendDataAndFinish();
                         }
                     } else {
-                        Toast.makeText(RoomID.this,
+                        Toast.makeText(ChooseRoomActivity.this,
                                 "Room ID does not exist or is not opened. Try again!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(RoomID.this,
+                    Toast.makeText(ChooseRoomActivity.this,
                             e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e("SpeakerFeedback", e.getMessage());
                 }
@@ -90,7 +82,7 @@ public class RoomID extends AppCompatActivity {
                 if (password_input.equals(password))
                 {
                     // TODO: enter the selected room here!
-                    Toast.makeText(RoomID.this,
+                    Toast.makeText(ChooseRoomActivity.this,
                             "Password correct", Toast.LENGTH_SHORT).show();
 
                     sendDataAndFinish();

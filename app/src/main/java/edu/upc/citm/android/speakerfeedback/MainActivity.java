@@ -209,8 +209,8 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("config", MODE_PRIVATE);
         room_id = prefs.getString("roomId", null);
 
-        if(room_id == null){
-            Intent intent = new Intent(this, RoomID.class);
+        if(room_id == null || room_id.isEmpty()){
+            Intent intent = new Intent(this, ChooseRoomActivity.class);
             startActivityForResult(intent,ENTER_ROOM_ID);
         }else{
             startFirestoreListenerService(room_id);
@@ -315,7 +315,13 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.close_session_btn:
                 stopFirestoreListenerService();
-                finish();
+                connected = false;
+                SharedPreferences prefs = getSharedPreferences("config", MODE_PRIVATE);
+                prefs.edit()
+                        .putString("roomId", "")
+                        .commit();
+                chooseRoom();
+
                 break;
             default:
                 return super.onOptionsItemSelected(item);
