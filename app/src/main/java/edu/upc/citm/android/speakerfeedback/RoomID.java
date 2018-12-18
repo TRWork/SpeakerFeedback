@@ -1,6 +1,7 @@
 package edu.upc.citm.android.speakerfeedback;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,10 +21,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RoomID extends AppCompatActivity {
+
+    private static final int MAIN_ACTIVITY = 0;
 
     EditText entered_room_id;
     private String password_input = "";
@@ -87,6 +91,10 @@ public class RoomID extends AppCompatActivity {
                     Toast.makeText(RoomID.this,
                             "Password correct", Toast.LENGTH_SHORT).show();
 
+                    Intent intent = new Intent(RoomID.this, MainActivity.class);
+                    intent.putExtra("room_id", entered_room_id.getText().toString());
+                    startActivity(intent);
+                    finish();
                 }
             }
         });

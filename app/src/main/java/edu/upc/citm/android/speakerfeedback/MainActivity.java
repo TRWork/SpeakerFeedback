@@ -156,14 +156,14 @@ public class MainActivity extends AppCompatActivity {
         // TODO: check if you're already in a room. If not: call the method below
         chooseRoom();
 
-        db.collection("rooms").document("testroom")
+        /*db.collection("rooms").document("testroom")
                 .addSnapshotListener(this,roomListener);
 
         db.collection("users").whereEqualTo("room", "testroom").
                 addSnapshotListener(this,usersListener);
 
         db.collection("rooms").document("testroom").collection("polls")
-                .orderBy("start", Query.Direction.DESCENDING).addSnapshotListener(this, pollsListener);
+                .orderBy("start", Query.Direction.DESCENDING).addSnapshotListener(this, pollsListener);*/
     }
 
     private void getOrRegisterUser() {
@@ -183,16 +183,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void enterRoom() {
+    public void enterRoom() {
         db.collection("users").document(userId)
                 .update(
                         "room", "testroom", "last_active", new Date()
                 );
     }
 
+    public void enterRoom(String room_id) {
+        db.collection("users").document(userId)
+                .update(
+                        "room", room_id, "last_active", new Date()
+                );
+    }
+
     private void chooseRoom() {
         Intent intent = new Intent(this, RoomID.class);
-        startActivity(intent);
+        startActivityForResult(intent,ENTER_ROOM_ID);
     }
 
     @Override
@@ -206,6 +213,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Has de registrar un nom", Toast.LENGTH_SHORT).show();
                     finish();
                 }
+                break;
+            case ENTER_ROOM_ID:
+                    String room_id = data.getStringExtra("room_id");
+                    enterRoom(room_id);
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
