@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,8 @@ public class ChooseRoomActivity extends AppCompatActivity {
     private String password_input = "";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private RecyclerView items_view;
+    //private Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
