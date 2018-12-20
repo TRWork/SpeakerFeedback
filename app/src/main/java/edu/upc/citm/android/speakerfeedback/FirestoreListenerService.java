@@ -26,9 +26,6 @@ public class FirestoreListenerService extends Service {
         super.onCreate();
         Log.i("SpeakerFeedback", "FirestoreListenerService.onCreate");
 
-
-
-
     }
 
     @Override
