@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
        public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
             if (e != null) {
-                Log.e("SpeakerFeedback", "Error on recieve rooms/testroom", e);
+                Log.e("SpeakerFeedback", "Error on recieve rooms/...", e);
                 return;
             }
 
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                         map.put("pollid", polls.get(0).getPoll_id());
                         map.put("option",which);
 
-                        db.collection("rooms").document("testroom").
+                        db.collection("rooms").document(room_id).
                                 collection("votes").document(userId).set(map);
                     }
                 });
