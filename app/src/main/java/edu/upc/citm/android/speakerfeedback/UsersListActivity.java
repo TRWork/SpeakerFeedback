@@ -1,5 +1,6 @@
 package edu.upc.citm.android.speakerfeedback;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -27,6 +28,8 @@ public class UsersListActivity extends AppCompatActivity {
     private UserListAdapter adapter;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    private String room_id = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +48,15 @@ public class UsersListActivity extends AppCompatActivity {
         );
         items_view.setAdapter(adapter);
 
+        Intent intent = getIntent();
+        room_id = intent.getStringExtra("room_id");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
 
-        db.collection("users").whereEqualTo("room", "testroom").
+        db.collection("users").whereEqualTo("room", room_id).
                 addSnapshotListener(this,usersListener);
     }
 

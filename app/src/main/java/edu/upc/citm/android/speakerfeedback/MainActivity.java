@@ -272,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Call the usr list activity here
         Intent intent = new Intent(this, UsersListActivity.class);
+        intent.putExtra("room_id", room_id);
         startActivity(intent);
     }
 
