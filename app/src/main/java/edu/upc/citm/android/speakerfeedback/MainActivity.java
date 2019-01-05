@@ -113,7 +113,16 @@ public class MainActivity extends AppCompatActivity {
             if (!documentSnapshot.contains("open") || !documentSnapshot.getBoolean("open"))
             {
                 stopFirestoreListenerService();
-                finish();
+                connected = false;
+                SharedPreferences prefs = getSharedPreferences("config", MODE_PRIVATE);
+                prefs.edit()
+                        .putString("roomId", "")
+                        .commit();
+                db.collection("users").document(userId)
+                        .update(
+                                "room", FieldValue.delete()
+                        );
+                chooseRoom();
             }
             else
             {
