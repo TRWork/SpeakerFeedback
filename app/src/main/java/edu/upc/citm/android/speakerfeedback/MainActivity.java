@@ -330,8 +330,11 @@ public class MainActivity extends AppCompatActivity {
                 prefs.edit()
                         .putString("roomId", "")
                         .commit();
+                db.collection("users").document(userId)
+                        .update(
+                                "room", FieldValue.delete()
+                        );
                 chooseRoom();
-
                 break;
             default:
                 return super.onOptionsItemSelected(item);
