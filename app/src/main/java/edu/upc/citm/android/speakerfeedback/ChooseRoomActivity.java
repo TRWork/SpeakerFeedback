@@ -54,8 +54,14 @@ public class ChooseRoomActivity extends AppCompatActivity {
                             sendDataAndFinish();
                         }
                     } else {
-                        Toast.makeText(ChooseRoomActivity.this,
-                                "Room ID does not exist or is not opened. Try again!", Toast.LENGTH_SHORT).show();
+
+                        if (!documentSnapshot.exists()) {
+                            Toast.makeText(ChooseRoomActivity.this,
+                                    "Room with ID " + "'" + entered_room_id.getText().toString() + "'" + " does not exist. Try another one!", Toast.LENGTH_SHORT).show();
+                        } else if (!documentSnapshot.contains("open")) {
+                            Toast.makeText(ChooseRoomActivity.this,
+                                    "Room with ID " + "'" + entered_room_id.getText().toString() + "'" + " is not open. Try another one!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -84,11 +90,15 @@ public class ChooseRoomActivity extends AppCompatActivity {
                 password_input = input.getText().toString();
                 if (password_input.equals(password))
                 {
-                    // TODO: enter the selected room here!
                     Toast.makeText(ChooseRoomActivity.this,
                             "Password correct", Toast.LENGTH_SHORT).show();
 
                     sendDataAndFinish();
+                }
+                else
+                {
+                    Toast.makeText(ChooseRoomActivity.this,
+                            "Password incorrect! Try again.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

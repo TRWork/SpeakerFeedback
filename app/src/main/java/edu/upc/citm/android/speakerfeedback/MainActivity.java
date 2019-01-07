@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
        public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
             if (e != null) {
-                Log.e("SpeakerFeedback", "Error on recieve rooms/...", e);
+                Log.e("SpeakerFeedback", "Error on receive rooms/...", e);
                 return;
             }
 
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
             if (e != null) {
-                Log.e("SpeakerFeedback", "Error on recieve users inside a room", e);
+                Log.e("SpeakerFeedback", "Error on receiving users inside a room", e);
                 return;
             }
             textView.setText(String.format("Users connected: %d", documentSnapshots.size()));
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
             if(e != null){
-                Log.e("SpekerFeedback","Error al rebre la llista de 'polls'");
+                Log.e("SpekerFeedback","Error on receiving 'polls' list...");
                 return;
             }
             polls = new ArrayList<>();
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 poll.setPoll_id(doc.getId());
                 polls.add(poll);
             }
-            Log.i("SpeakerFeedBack",String.format("He carregat %d polls.", polls.size()));
+            Log.i("SpeakerFeedBack",String.format("%d polls have been loaded.", polls.size()));
 
             adapter.notifyDataSetChanged();
         }
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
             // Hem de registrar l'usuari, demanem el nom
             Intent intent = new Intent(this, RegisterUserActivity.class);
             startActivityForResult(intent, REGISTER_USER);
-            Toast.makeText(this, "Encara t'has de registrar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "You still need to log in!", Toast.LENGTH_SHORT).show();
 
         } else {
             // Ja està registrat, mostrem el id al Log
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                     registerUser(name);
                     logged = true;
                 } else {
-                    Toast.makeText(this, "Has de registrar un nom", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "You need to log in with a username!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 break;
@@ -269,9 +269,9 @@ public class MainActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("SpeakerFeedback", "Error creant objecte", e);
+                Log.e("SpeakerFeedback", "Error creating object", e);
                 Toast.makeText(MainActivity.this,
-                        "No s'ha pogut registrar l'usuari, intenta-ho més tard", Toast.LENGTH_SHORT).show();
+                        "User could not be logged. Try again later...", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
