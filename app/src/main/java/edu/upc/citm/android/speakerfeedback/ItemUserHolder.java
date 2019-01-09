@@ -9,18 +9,9 @@ import android.widget.TextView;
 public class ItemUserHolder extends RecyclerView.ViewHolder {
     private TextView name_view;
 
-    public ItemUserHolder(@NonNull View itemView, final UserListAdapter.OnClickListener onClickListener) {
+    public ItemUserHolder(@NonNull View itemView) {
         super(itemView);
         name_view = itemView.findViewById(R.id.user_name_view);
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onClickListener != null) {
-                    int pos = getAdapterPosition();
-                    onClickListener.onClick(pos);
-                }
-            }
-        });
     }
 
     public void bind(UserItem item) {

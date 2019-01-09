@@ -34,7 +34,6 @@ public class Poll {
     }
 
     public String getOptionsAsString(){
-        // Aixi se sumen molts string a java
         StringBuilder b = new StringBuilder();
         for (String opt : options){
             b.append(opt);

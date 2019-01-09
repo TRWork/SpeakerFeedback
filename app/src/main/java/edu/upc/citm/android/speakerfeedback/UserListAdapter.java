@@ -12,7 +12,6 @@ import java.util.List;
 public class UserListAdapter extends RecyclerView.Adapter<ItemUserHolder> {
     Context context;
     List<UserItem> items;
-    private OnClickListener onClickListener;
 
     public UserListAdapter(Context context, List<UserItem> items) {
         this.context = context;
@@ -23,7 +22,7 @@ public class UserListAdapter extends RecyclerView.Adapter<ItemUserHolder> {
     @Override
     public ItemUserHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(context).inflate(R.layout.user_item_view, parent, false);
-        return new ItemUserHolder(itemView, onClickListener);
+        return new ItemUserHolder(itemView);
     }
 
     @Override
@@ -34,15 +33,6 @@ public class UserListAdapter extends RecyclerView.Adapter<ItemUserHolder> {
     @Override
     public int getItemCount() {
         return items.size();
-    }
-
-    public void setOnClickListener(OnClickListener listener) {
-        this.onClickListener = listener;
-    }
-
-
-    public interface OnClickListener {
-        void onClick(int position);
     }
 }
 

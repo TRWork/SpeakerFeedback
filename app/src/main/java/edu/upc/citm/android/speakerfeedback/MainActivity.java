@@ -167,7 +167,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        // TODO: check if you're already in a room. If not: call the method below
         if(!connected && logged)
             chooseRoom();
 
@@ -184,17 +183,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getOrRegisterUser() {
-        // Busquem a les preferències de l'app l'ID de l'usuari per saber si ja s'havia registrat
         SharedPreferences prefs = getSharedPreferences("config", MODE_PRIVATE);
         userId = prefs.getString("userId", null);
         if (userId == null) {
-            // Hem de registrar l'usuari, demanem el nom
             Intent intent = new Intent(this, RegisterUserActivity.class);
             startActivityForResult(intent, REGISTER_USER);
             Toast.makeText(this, "You still need to log in!", Toast.LENGTH_SHORT).show();
 
         } else {
-            // Ja està registrat, mostrem el id al Log
             Log.i("SpeakerFeedback", "userId = " + userId);
             logged = true;
         }
@@ -250,8 +246,6 @@ public class MainActivity extends AppCompatActivity {
         db.collection("users").add(fields).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                // Toast.makeText(MainActivity.this, "Success!", Toast.LENGTH_SHORT).show();
-                // textview.setText(documentReference.getId());
                 userId = documentReference.getId();
                 SharedPreferences prefs = getSharedPreferences("config", MODE_PRIVATE);
                 prefs.edit()
@@ -271,8 +265,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickUsersBar(View view) {
-
-        // Call the usr list activity here
         Intent intent = new Intent(this, UsersListActivity.class);
         intent.putExtra("room_id", room_id);
         startActivity(intent);
@@ -373,7 +365,6 @@ public class MainActivity extends AppCompatActivity {
                 holder.label_view.setVisibility(View.VISIBLE);
                 if(poll.isOpen()){
                     holder.label_view.setText("Active");
-                   // poll.setPoll_id();
                 }else{
                     holder.label_view.setText("Previous");
                 }

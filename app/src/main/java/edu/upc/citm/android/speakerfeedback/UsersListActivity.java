@@ -76,9 +76,6 @@ public class UsersListActivity extends AppCompatActivity {
                 items.add(new_user);
             }
             adapter.notifyDataSetChanged();
-
-            // textView.setText(usersNames);
-            //
         }
     };
 }

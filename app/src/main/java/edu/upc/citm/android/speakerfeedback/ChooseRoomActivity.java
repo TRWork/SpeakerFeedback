@@ -34,8 +34,6 @@ import java.util.Scanner;
 
 public class ChooseRoomActivity extends AppCompatActivity {
 
-    private static final int MAIN_ACTIVITY = 0;
-
     private static final String SAVE_FILE_NAME = "recent_rooms.txt";
 
     EditText entered_room_id;
@@ -48,7 +46,6 @@ public class ChooseRoomActivity extends AppCompatActivity {
     // Model
     List<RecentRoomItem> recent_rooms;
 
-    // Referències a elements de la pantalla
     private RecyclerView recent_rooms_recycle_view;
     private RecentRoomAdapter adapter;
 
