@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
@@ -18,6 +20,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ChooseRoomActivity extends AppCompatActivity {
 
     private static final int MAIN_ACTIVITY = 0;
@@ -26,8 +31,12 @@ public class ChooseRoomActivity extends AppCompatActivity {
     private String password_input = "";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private RecyclerView items_view;
-    //private Adapter adapter;
+    // Model
+    List<RecentRoomItem> recent_rooms;
+
+    // Referències a elements de la pantalla
+    private RecyclerView recent_rooms_recycle_view;
+    private RecentRoomAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +45,21 @@ public class ChooseRoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
         entered_room_id = findViewById(R.id.edit_room_id);
+
+        recent_rooms_recycle_view = findViewById(R.id.recent_rooms_id);
+        recent_rooms_recycle_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recent_rooms_recycle_view.addItemDecoration(
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        );
+
+        recent_rooms = new ArrayList<>();
+
+        adapter = new RecentRoomAdapter(this, recent_rooms);
+        recent_rooms_recycle_view.setAdapter(adapter);
+
+        for (int i = 0; i < 30; ++i) {
+            recent_rooms.add(new RecentRoomItem("Room: #" + i));
+        }
     }
 
     public void OnContinue(View view) {

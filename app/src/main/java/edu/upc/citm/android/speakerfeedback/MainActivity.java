@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
                         .update(
                                 "room", FieldValue.delete()
                         );
-                Log.e("SpekerFeedback","OJHOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOKIJHUBSDFGHJUBND");
                 chooseRoom();
             }
             else
