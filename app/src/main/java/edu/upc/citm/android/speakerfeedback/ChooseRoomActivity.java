@@ -20,12 +20,21 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ChooseRoomActivity extends AppCompatActivity {
 
     private static final int MAIN_ACTIVITY = 0;
+
+    private static final String SAVE_FILE_NAME = "recent_rooms.txt";
 
     EditText entered_room_id;
     private String password_input = "";
@@ -44,6 +53,8 @@ public class ChooseRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
+        readItemList();
+
         entered_room_id = findViewById(R.id.edit_room_id);
 
         recent_rooms_recycle_view = findViewById(R.id.recent_rooms_id);
@@ -52,13 +63,44 @@ public class ChooseRoomActivity extends AppCompatActivity {
                 new DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         );
 
-        recent_rooms = new ArrayList<>();
-
         adapter = new RecentRoomAdapter(this, recent_rooms);
+
         recent_rooms_recycle_view.setAdapter(adapter);
 
-        for (int i = 0; i < 30; ++i) {
-            recent_rooms.add(new RecentRoomItem("Room: #" + i));
+    }
+
+    private void saveItemList() {
+        try {
+            FileOutputStream outputStream = openFileOutput(SAVE_FILE_NAME, MODE_PRIVATE);
+            OutputStreamWriter writer = new OutputStreamWriter(outputStream);
+            for (int i = 0; i < recent_rooms.size(); i++) {
+                RecentRoomItem item = recent_rooms.get(i);
+                writer.write(String.format("%s\n", item.getName()));
+            }
+            writer.close();
+        }
+        catch (FileNotFoundException e) {
+            Log.e("SpeakerFeedback", "saveItemList: FileNotFoundException");
+        }
+        catch (IOException e) {
+            Log.e("SpeakerFeedback", "saveItemList: IOException");
+        }
+    }
+
+    private void readItemList() {
+        recent_rooms = new ArrayList<>();
+        try {
+            FileInputStream inputStream = openFileInput(SAVE_FILE_NAME);
+            InputStreamReader reader = new InputStreamReader(inputStream);
+            Scanner scanner = new Scanner(reader);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                //String[] parts = line.split(";");
+                recent_rooms.add(new RecentRoomItem(line));
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("SpeakerFeedback", "readItemList: FileNotFoundException");
         }
     }
 
@@ -138,6 +180,10 @@ public class ChooseRoomActivity extends AppCompatActivity {
     }
 
     private void sendDataAndFinish() {
+        recent_rooms.add(new RecentRoomItem(entered_room_id.getText().toString()));
+
+        saveItemList();
+
         Intent data = new Intent();
         data.putExtra("room_id", entered_room_id.getText().toString());
         setResult(RESULT_OK, data);
