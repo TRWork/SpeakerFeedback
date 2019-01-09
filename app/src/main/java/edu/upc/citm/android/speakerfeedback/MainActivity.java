@@ -30,6 +30,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -152,11 +153,18 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             polls = new ArrayList<>();
+            int open_id = 0;
             for (DocumentSnapshot doc:documentSnapshots){
                 Poll poll = doc.toObject(Poll.class);
                 poll.setPoll_id(doc.getId());
                 polls.add(poll);
+                if(poll.isOpen())
+                    open_id = polls.indexOf(poll);
             }
+
+            if(!polls.isEmpty())
+                Collections.swap(polls,0,open_id);
+
             Log.i("SpeakerFeedBack",String.format("%d polls have been loaded.", polls.size()));
 
             adapter.notifyDataSetChanged();
@@ -380,6 +388,9 @@ public class MainActivity extends AppCompatActivity {
             holder.card_view.setCardElevation(poll.isOpen() ? 10.0f: 0.0f);
             if(!poll.isOpen())
                 holder.card_view.setCardBackgroundColor(0xFFE0E0E0);
+            else
+                holder.card_view.setCardBackgroundColor(0xFFFFFFFF);
+
             holder.question_view.setText(poll.getQuestion());
             holder.options_view.setText(poll.getOptionsAsString());
         }
