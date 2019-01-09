@@ -1,5 +1,6 @@
 package edu.upc.citm.android.speakerfeedback;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -37,8 +39,11 @@ public class ChooseRoomActivity extends AppCompatActivity {
     private static final String SAVE_FILE_NAME = "recent_rooms.txt";
 
     EditText entered_room_id;
+    Button continue_btn;
     private String password_input = "";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private boolean is_recent_room = false;
 
     // Model
     List<RecentRoomItem> recent_rooms;
@@ -58,6 +63,7 @@ public class ChooseRoomActivity extends AppCompatActivity {
         readItemList();
 
         entered_room_id = findViewById(R.id.edit_room_id);
+        continue_btn = findViewById(R.id.enter_btn);
 
         recent_rooms_recycle_view = findViewById(R.id.recent_rooms_id);
         recent_rooms_recycle_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -68,6 +74,14 @@ public class ChooseRoomActivity extends AppCompatActivity {
         adapter = new RecentRoomAdapter(this, recent_rooms);
 
         recent_rooms_recycle_view.setAdapter(adapter);
+        adapter.setOnClickListener(new RecentRoomAdapter.OnClickListener() {
+            @Override
+            public void onClick(int position) {
+                entered_room_id.setText(recent_rooms.get(position).getName().toString());
+                is_recent_room = true;
+                continue_btn.performClick();
+            }
+        });
 
     }
 
@@ -119,7 +133,7 @@ public class ChooseRoomActivity extends AppCompatActivity {
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Log.i("SpeakerFeedback", documentSnapshot.toString());
                     if (documentSnapshot.exists() && documentSnapshot.contains("open")) {
-                        if (documentSnapshot.contains("password") && !documentSnapshot.getString("password").isEmpty()) { // Contains password
+                        if (documentSnapshot.contains("password") && !documentSnapshot.getString("password").isEmpty() && !is_recent_room) { // Contains password
                             onPasswordPopup(documentSnapshot.get("password").toString());
                         }else {
                             sendDataAndFinish();
@@ -192,6 +206,8 @@ public class ChooseRoomActivity extends AppCompatActivity {
         Intent data = new Intent();
         data.putExtra("room_id", entered_room_id.getText().toString());
         setResult(RESULT_OK, data);
+
+        is_recent_room = false;
         finish();
     }
 }
