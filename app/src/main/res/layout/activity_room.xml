@@ -56,7 +56,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Recent rooms"
+        android:text="Recent rooms (Long click to delete)"
         android:textColor="@color/cardview_dark_background"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

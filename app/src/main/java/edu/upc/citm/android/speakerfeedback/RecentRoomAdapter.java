@@ -13,6 +13,7 @@ public class RecentRoomAdapter extends RecyclerView.Adapter<ItemRecentRoomHolder
     Context context;
     List<RecentRoomItem> recent_rooms;
     private RecentRoomAdapter.OnClickListener onClickListener;
+    private RecentRoomAdapter.OnLongClickListener onLongClickListener;
 
     public RecentRoomAdapter(Context context, List<RecentRoomItem> items) {
         this.context = context;
@@ -23,7 +24,7 @@ public class RecentRoomAdapter extends RecyclerView.Adapter<ItemRecentRoomHolder
     @Override
     public ItemRecentRoomHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(context).inflate(R.layout.recent_room_item, parent, false);
-        return new ItemRecentRoomHolder(itemView, onClickListener);
+        return new ItemRecentRoomHolder(itemView, onClickListener, onLongClickListener);
     }
 
     @NonNull
@@ -40,6 +41,13 @@ public class RecentRoomAdapter extends RecyclerView.Adapter<ItemRecentRoomHolder
 
     public interface OnClickListener {
         void onClick(int position);
+    }
+
+    public void setOnLongClickListener(OnLongClickListener listener) {
+        this.onLongClickListener = listener;
+    }
+    public interface OnLongClickListener {
+        void onLongClick(int position);
     }
 
     @Override

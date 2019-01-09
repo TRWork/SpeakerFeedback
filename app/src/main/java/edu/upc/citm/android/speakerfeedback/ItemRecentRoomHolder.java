@@ -9,7 +9,7 @@ class ItemRecentRoomHolder extends RecyclerView.ViewHolder {
 
     private TextView name_view;
 
-    public ItemRecentRoomHolder(@NonNull View itemView, final RecentRoomAdapter.OnClickListener onClickListener) {
+    public ItemRecentRoomHolder(@NonNull View itemView, final RecentRoomAdapter.OnClickListener onClickListener,final RecentRoomAdapter.OnLongClickListener onLongClickListener) {
         super(itemView);
         name_view = itemView.findViewById(R.id.recent_room_view);
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -19,6 +19,19 @@ class ItemRecentRoomHolder extends RecyclerView.ViewHolder {
                     int pos = getAdapterPosition();
                     onClickListener.onClick(pos);
                 }
+            }
+        });
+
+        itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                boolean ret = false;
+                if (onLongClickListener != null) {
+                    int pos = getAdapterPosition();
+                    onLongClickListener.onLongClick(pos);
+                    ret = true;
+                }
+                return  ret;
             }
         });
     }

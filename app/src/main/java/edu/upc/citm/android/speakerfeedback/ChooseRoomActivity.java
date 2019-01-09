@@ -82,7 +82,28 @@ public class ChooseRoomActivity extends AppCompatActivity {
                 continue_btn.performClick();
             }
         });
+        adapter.setOnLongClickListener(new RecentRoomAdapter.OnLongClickListener() {
+            @Override
+            public void onLongClick(int position) {
+                EraseItemIn(position);
+            }
+        });
+    }
 
+    private void EraseItemIn(final int del_pos) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete room");
+        String dialog_message = "Are you sure you want to delete " + recent_rooms.get(del_pos).getName();
+        builder.setMessage(dialog_message);
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                recent_rooms.remove(del_pos);
+                adapter.notifyItemRemoved(del_pos);
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.create().show();
     }
 
     private void saveItemList() {
