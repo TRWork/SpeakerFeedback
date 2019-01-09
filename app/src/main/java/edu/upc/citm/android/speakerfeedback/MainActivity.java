@@ -238,16 +238,6 @@ public class MainActivity extends AppCompatActivity {
                     room_id = data.getStringExtra("room_id");
                     startFirestoreListenerService(room_id);
                     enterRoom(room_id);
-                if(connected){
-                    db.collection("rooms").document(room_id)
-                            .addSnapshotListener(this,roomListener);
-
-                    db.collection("users").whereEqualTo("room", room_id).
-                            addSnapshotListener(this,usersListener);
-
-                    db.collection("rooms").document(room_id).collection("polls")
-                            .orderBy("start", Query.Direction.DESCENDING).addSnapshotListener(this, pollsListener);
-                }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);

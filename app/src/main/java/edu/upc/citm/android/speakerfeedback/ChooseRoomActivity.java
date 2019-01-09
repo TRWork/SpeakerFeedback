@@ -53,6 +53,8 @@ public class ChooseRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
+        password_input = "";
+
         readItemList();
 
         entered_room_id = findViewById(R.id.edit_room_id);
@@ -75,7 +77,7 @@ public class ChooseRoomActivity extends AppCompatActivity {
             OutputStreamWriter writer = new OutputStreamWriter(outputStream);
             for (int i = 0; i < recent_rooms.size(); i++) {
                 RecentRoomItem item = recent_rooms.get(i);
-                writer.write(String.format("%s\n", item.getName()));
+                writer.write(String.format("%s;%s\n", item.getName(), item.getPassword()));
             }
             writer.close();
         }
@@ -95,8 +97,11 @@ public class ChooseRoomActivity extends AppCompatActivity {
             Scanner scanner = new Scanner(reader);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                //String[] parts = line.split(";");
-                recent_rooms.add(new RecentRoomItem(line));
+                String[] parts = line.split(";");
+                if(parts.length > 1)
+                    recent_rooms.add(new RecentRoomItem(parts[0],parts[1]));
+                else
+                    recent_rooms.add(new RecentRoomItem(parts[0],""));
             }
         }
         catch (FileNotFoundException e) {
@@ -180,7 +185,7 @@ public class ChooseRoomActivity extends AppCompatActivity {
     }
 
     private void sendDataAndFinish() {
-        recent_rooms.add(new RecentRoomItem(entered_room_id.getText().toString()));
+        recent_rooms.add(new RecentRoomItem(entered_room_id.getText().toString(),password_input));
 
         saveItemList();
 
