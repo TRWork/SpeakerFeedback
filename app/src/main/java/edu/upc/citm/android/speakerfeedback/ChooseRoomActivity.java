@@ -199,9 +199,19 @@ public class ChooseRoomActivity extends AppCompatActivity {
     }
 
     private void sendDataAndFinish() {
-        recent_rooms.add(new RecentRoomItem(entered_room_id.getText().toString(),password_input));
 
-        saveItemList();
+        if(recent_rooms.isEmpty()){
+            recent_rooms.add(new RecentRoomItem(entered_room_id.getText().toString(),password_input));
+            saveItemList();
+        }else{
+            for (RecentRoomItem recent_item : recent_rooms) {
+                if(!recent_item.getName().toString().equals(entered_room_id.getText().toString())){
+                    recent_rooms.add(new RecentRoomItem(entered_room_id.getText().toString(),password_input));
+                    saveItemList();
+                    break;
+                }
+            }
+        }
 
         Intent data = new Intent();
         data.putExtra("room_id", entered_room_id.getText().toString());
